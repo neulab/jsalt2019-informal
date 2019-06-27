@@ -58,6 +58,37 @@ en_map = {
   'them': (3, None, 'plrl'),
 }
 
+
+fr_map = {
+  # I (subject)
+  'je': (1, None, 'sing'),
+  # Me (object)
+  'moi': (1, None, 'sing'),
+  # You (subject)
+  'tu': (2, 'infml', 'sing'),
+  # You (object)
+  'toi': (2, 'infml', 'sing'),
+  # He (subject)
+  'il': (3, None, 'sing'),
+  # Him (object)
+  'lui': (3, None, 'sing'),
+  # She/her (object and subject)
+  'elle': (3, None, 'sing'),
+  # this is a weird one. It can be translated as "one" in english (eg "one does not do this") but is also used a lot as an informal way of saying "we" (very relevant here)
+  # I would say that it is informal. Also it refers to multiple or an indefinite amount of people but still conjugates as a singular (yes...)
+  'on': (1, 'infml', 'sing'),
+  # We/us
+  'nous': (1, None, 'plrl'),
+  # You: This is either (plural AND neither formal or informal) OR (singular AND formal).
+  'vous': (2, None, None),
+  # They (subject, masculine)
+  'ils': (3, None, 'plrl'),
+  # They (object, masculine)
+  'eux': (3, None, 'plrl'),
+  # They (subject/object, feminine)
+  'elles': (3, None, 'plrl'),
+}
+
 tag_map = {
   'ja': lambda x: ja_map.get(x, (None, None, None)),
   'en': lambda x: en_map.get(x, (None, None, None)),
