@@ -71,7 +71,10 @@ def assign_alignments(aligns, inf, outf, reverse=False):
 
 with open(alignfile, 'r') as alignstream:
   for f in f_orig:
-    assign_alignments(alignstream, f, f.replace(f'{lang}.tok', f'{lang}-en-{args.aligner}align'))
+    if f'en-{lang}' in f:
+      assign_alignments(alignstream, f, f.replace(f'{lang}.tok', f'en-{lang}-{args.aligner}align'), reverse=True)
+    else:
+      assign_alignments(alignstream, f, f.replace(f'{lang}.tok', f'{lang}-en-{args.aligner}align'))
   for f in f_ftrg:
     assign_alignments(alignstream, f, f.replace(f'{lang}.tok', f'en-{lang}-{args.aligner}align'), reverse=True)
   for e in e_etrg:
