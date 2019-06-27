@@ -26,14 +26,14 @@ tar -xzf wmt2019-system-data.tar.gz
 # Tokenize all the files
 for l in en; do
   for f in wmt2019-system-data/mtnt/*.$l wmt2019-system-data/extra/*/*.$l wmt2019-system-data/outputs/*/*.$l; do
-    echo "python do_tokenize.py en_core_web_sm < $f > $f.tok"
-    python do_tokenize.py en_core_web_sm < $f > $f.tok &
+    echo "python do_tokenize.py en < $f > $f.tok"
+    python do_tokenize.py en < $f > $f.tok &
   done
 done
 for l in fr; do
   for f in wmt2019-system-data/mtnt/*.$l wmt2019-system-data/extra/*/*.$l wmt2019-system-data/outputs/*/*.$l; do
-    echo "python do_tokenize.py fr_core_news_sm < $f > $f.tok"
-    python do_tokenize.py fr_core_news_sm < $f > $f.tok &
+    echo "python do_tokenize.py fr < $f > $f.tok"
+    python do_tokenize.py fr < $f > $f.tok &
   done
 done
 wait
