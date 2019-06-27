@@ -1,5 +1,6 @@
 set -e
 ### Script for processing the WMT robustness datasets to generate alignments
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Step 1. 
 #   Install Moses and GIZA++ according to the directions in the step-by-step guides here:
@@ -56,11 +57,11 @@ done
 wait
 
 mkdir -p alignments
-for f in ja; do
-  python make_alignments.py $f --aligner fa &> alignments/make-$f.log &
+for f in fr ja; do
+  python $DIR/make_alignments.py $f --aligner fa &> alignments/make-$f.log &
 done
 wait
 for f in fr ja; do
-  python make_alignments.py $f --aligner giza &> alignments/make-$f.log &
+  python $DIR/make_alignments.py $f --aligner giza &> alignments/make-$f.log &
 done
 wait
