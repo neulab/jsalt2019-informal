@@ -12,3 +12,4 @@ The following are various scripts you might use:
 
 * `create-alignments`: A pipeline to create alignments for the WMT2019 robustness task data and outputs
 * `tagging-scripts`: Scripts that can be used for tagging for further downstream analysis
+* `compare-mt`: Scripts to run [compare-mt](https://github.com/neulab/compare-mt) to generate reports
