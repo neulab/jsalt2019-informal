@@ -35,6 +35,12 @@ ja_map = {
   'あんた': (2, 'infml', 'sing'),
   'お前': (2, 'infml', 'sing'),
   '君': (2, 'infml', 'sing'),
+  # Less standard second person
+  '貴方': (2, 'fml', 'sing'),
+  'アナタ': (2, 'infml', 'sing'),
+  'おまえ': (2, 'infml', 'sing'),
+  'きみ': (2, 'infml', 'sing'),
+  'キミ': (2, 'infml', 'sing'),
   # "Standard" third person
   '彼': (3, 'fml', 'sing'), # can also mean "boyfriend"
   'かれ': (3, 'fml', 'sing'), # can also mean "boyfriend"

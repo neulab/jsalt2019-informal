@@ -46,6 +46,12 @@ pronoun_map = {
   'あんた': 2,
   'お前': 2,
   '君': 2,
+  # Less standard second person
+  '貴方': 2,
+  'アナタ': 2,
+  'おまえ': 2,
+  'きみ': 2,
+  'キミ': 2,
   # "Standard" third person
   '彼': 3, # can also mean "boyfriend"
   'かれ': 3, # can also mean "boyfriend"
