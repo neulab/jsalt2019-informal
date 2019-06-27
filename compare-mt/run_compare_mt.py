@@ -92,7 +92,7 @@ run_cmd(
   +f'    title=trg_mtnt_freq,bucket_type=freq,freq_count_file={sd}/mtnt/mtnt-train.{langpair}.{trg}.tok.cnt'
   +f'    title=trg_case,bucket_type=case'
   +f'    title=trg_emoji,bucket_type=label,{emoji_str},label_set=emoji' 
-  +f'    title=trg_pronouns,bucket_type=label,{prn_str},label_set=prn' 
+  +f'    title=trg_pronouns,bucket_type=label,{prn_str},label_set=1+2+3' 
   +f'  --compare_src_word_accuracies'
   +f'    title=src_general_freq,{align_str},bucket_type=freq,freq_count_file={sd}/extra/{jafr}/train.{src}.tok.cnt'
   +f'    title=src_mtnt_freq,{align_str},bucket_type=freq,freq_count_file={sd}/mtnt/mtnt-train.{langpair}.{src}.tok.cnt'
