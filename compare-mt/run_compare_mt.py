@@ -61,6 +61,7 @@ refout_str = (f'ref_XXX='+
              '"')
 align_str = refout_str.replace('XXX', 'align_file').replace('out_align_file', 'out_align_files').replace(f'{trg}.YYY', f'{langpair}-{args.aligner}align')
 emoji_str = refout_str.replace('XXX', 'labels').replace('YYY', f'emoji')
+prn_str = refout_str.replace('XXX', 'labels').replace('YYY', f'prn')
 all_toks = out_toks + [trg_tok] + [src_tok]
 all_langs = [trg for _ in all_toks]
 all_langs[-1] = src
@@ -72,6 +73,10 @@ for fin, lang in zip(all_toks, all_langs):
   assert(fout != fin)
   if not os.path.isfile(fout):
     run_cmd(f'python {args.jsaltdir}/tagging-scripts/tag_emojis.py < {fin} > {fout}')
+  fout = fin.replace('.tok', '.prn')
+  assert(fout != fin)
+  if not os.path.isfile(fout):
+    run_cmd(f'python {args.jsaltdir}/tagging-scripts/tag_pronouns.py {lang} < {fin} > {fout}')
 
 
 dirs = []
@@ -87,11 +92,13 @@ run_cmd(
   +f'    title=trg_mtnt_freq,bucket_type=freq,freq_count_file={sd}/mtnt/mtnt-train.{langpair}.{trg}.tok.cnt'
   +f'    title=trg_case,bucket_type=case'
   +f'    title=trg_emoji,bucket_type=label,{emoji_str},label_set=emoji' 
+  +f'    title=trg_pronouns,bucket_type=label,{prn_str},label_set=prn' 
   +f'  --compare_src_word_accuracies'
   +f'    title=src_general_freq,{align_str},bucket_type=freq,freq_count_file={sd}/extra/{jafr}/train.{src}.tok.cnt'
   +f'    title=src_mtnt_freq,{align_str},bucket_type=freq,freq_count_file={sd}/mtnt/mtnt-train.{langpair}.{src}.tok.cnt'
   +f'    title=src_case,{align_str},bucket_type=case'
   +f'    title=src_emoji,{align_str},bucket_type=label,src_labels='+src_tok.replace('.tok','.emoji')+',label_set=emoji' 
+  +f'    title=src_pronouns,{align_str},bucket_type=label,src_labels='+src_tok.replace('.tok','.prn')+',label_set=1+2+3' 
   +f'  --compare_ngrams'
   +f'    compare_type=match,compare_directions=\"{dirs}\"'
   +f'  --compare_sentence_examples'
