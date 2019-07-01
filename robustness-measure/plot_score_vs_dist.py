@@ -21,6 +21,10 @@ def rescale(x):
     return (x - x.min())/(x.max() - x.min())
 
 
+def flatten_lists(list_of_lists):
+    return [element for l in list_of_lists for element in l]
+
+
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--refs", metavar="REFS", nargs="+",
@@ -42,6 +46,8 @@ def get_args():
     parser.add_argument("--bs-resampling", type=str, default=None,
                         help="[N_samples]x[sample_size] for bootstrap "
                         "resampling within each bin")
+    parser.add_argument("--min-len", type=int, default=1,
+                        help="Minimum sentence length")
     # Parse
     args = parser.parse_args()
     # Check number of files
@@ -152,11 +158,16 @@ def main():
     refs = [loadtxt(filename) for filename in args.refs]
     outs = [loadtxt(filename) for filename in args.outs]
     srcs = [loadtxt(filename) for filename in args.srcs]
-    dists = np.concatenate([np.loadtxt(filename) for filename in args.dists])
+    # Keep track of sentence origin
+    origin = np.asarray([i for i, ref in enumerate(refs) for sent in ref])
+    # Flatten
+    refs = np.asarray(flatten_lists(refs))
+    outs = np.asarray(flatten_lists(outs))
+    srcs = np.asarray(flatten_lists(srcs))
+    dists = np.concatenate([np.loadtxt(fname) for fname in args.dists])
     # Load or compute scores
     if args.scores is not None:
-        scores = np.concatenate([np.loadtxt(filename)
-                                 for filename in args.scores])
+        scores = np.concatenate([np.loadtxt(fname) for fname in args.scores])
     else:
         if args.score_type not in score_funcs:
             raise ValueError(
@@ -179,10 +190,19 @@ def main():
                 )
             np.savetxt(f"{ref_file}.{args.score_type}", score)
         scores = np.concatenate(scores)
-    # Parse BS resampling example
+    # Parse BS resampling argument
     if args.bs_resampling is not None:
         n_samples, sample_size = args.bs_resampling.split("x")
         args.bs_resampling = (int(n_samples), int(sample_size))
+    # Filter by minimum length
+    long_enough = [len(sent.split()) >= args.min_len for sent in srcs]
+    srcs = srcs[long_enough]
+    refs = refs[long_enough]
+    outs = outs[long_enough]
+    dists = dists[long_enough]
+    scores = scores[long_enough]
+    origin = origin[long_enough]
+    # Figure
     plt.figure(figsize=(7, 8))
     # Pearson correclation as titles
     corr_, p_val = pearsonr(scores, dists)
@@ -193,19 +213,16 @@ def main():
     # Scatter plot of the test samples (by datasets)
     plt.subplot("211")
     # Colors for plotting
-    color_spectrum = np.linspace(0.1, 0.9, len(refs))
-    colors = np.concatenate([
-        np.full(len(refs[i]), v)
-        for i, v in enumerate(color_spectrum)
-    ])
-    plt.scatter(dists, scores, s=0.5, c=colors,
+    color_spectrum = np.linspace(0.1, 0.9, len(args.refs))
+    plt.scatter(dists, scores, s=0.5, c=color_spectrum[origin],
                 marker="+", alpha=0.9, cmap="jet")
     # Make a good legend
     cmap = plt.get_cmap("jet")
+    print([color_spectrum[i] for i in set(origin)])
     legend_elements = [
         matplotlib.lines.Line2D([0], [0], marker='+', markersize=10,
                                 color=cmap(color_spectrum[i]), linewidth=0)
-        for i in range(len(srcs))
+        for i in set(origin)
     ]
     plt.legend(legend_elements, args.srcs)
     plt.xlabel("NLL")
@@ -222,7 +239,6 @@ def main():
     score_name = (args.score_type).replace(" ", "_")
     plt.savefig(f"{score_name}_vs_nll.png", bbox_inches="tight", dpi=300)
     # Print extremal elements
-    srcs = [sent for dataset in srcs for sent in dataset]
     # We take the max/min of the sum/difference of the rescaled scores and
     # distances
     sum_ = rescale(dists) + rescale(scores)
