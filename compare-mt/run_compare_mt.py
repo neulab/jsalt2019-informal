@@ -59,7 +59,7 @@ refout_str = (f'ref_XXX='+
              ',out_XXX="'+
              ';'.join([f.replace(f'.tok',f'.YYY') for f in out_toks])+
              '"')
-align_str = refout_str.replace('XXX', 'align_file').replace('out_align_file', 'out_align_files').replace(f'{trg}.YYY', f'{langpair}-{args.aligner}align')
+align_str = f'ref_align_file={sd}/mtnt/mtnt-test2019.{langpair}.{langpair}-{args.aligner}align'
 emoji_str = refout_str.replace('XXX', 'labels').replace('YYY', f'emoji')
 prn_str = refout_str.replace('XXX', 'labels').replace('YYY', f'prn')
 all_toks = out_toks + [trg_tok] + [src_tok]
